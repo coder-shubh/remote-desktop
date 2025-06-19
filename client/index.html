@@ -1,22 +1,45 @@
-<!-- client/index.html -->
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Remote Viewer</title>
+  </head>
   <body>
-    <h2>🖥️ Client: Receiving screen...</h2>
-    <p id="status">Waiting for stream...</p>
+    <h3>Enter Session Code:</h3>
+    <input id="code" />
+    <button onclick="connect()">Connect</button>
+    <p id="error" style="color:red;"></p>
+    <br />
     <img id="screen" width="100%" />
-
     <script>
-      const io = require("socket.io-client");
-      const { SERVER_URL } = require("../shared/config");
-      const socket = io(SERVER_URL);
+      const { ipcRenderer } = require("electron");
+      const socket = require("socket.io-client")(
+        require("../shared/config").SERVER_URL
+      );
+      let code = "";
 
-      socket.on("connect", () => {
-        document.getElementById("status").innerText = "Connected to server";
+      function connect() {
+        code = document.getElementById("code").value;
+        socket.emit("join-session", code);
+      }
+
+      ipcRenderer.on("screen-data", (e, data) => {
+        document.getElementById("screen").src = `data:image/jpeg;base64,${data}`;
       });
 
-      socket.on("screen-data", (base64) => {
-        document.getElementById("screen").src = "data:image/jpeg;base64," + base64;
+      ipcRenderer.on("invalid-code", () => {
+        document.getElementById("error").textContent = "Invalid session code.";
+      });
+
+      document.addEventListener("click", (e) => {
+        const img = document.getElementById("screen");
+        const rect = img.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+        socket.emit("mouse", { code, event: { x, y, button: "left" } });
+      });
+
+      document.addEventListener("keydown", (e) => {
+        socket.emit("keyboard", { code, event: { key: e.key } });
       });
     </script>
   </body>
