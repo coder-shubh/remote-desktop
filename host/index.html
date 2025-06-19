@@ -1,0 +1,27 @@
+<!-- host/index.html -->
+<!DOCTYPE html>
+<html>
+  <body>
+    <h2>📡 Host: Streaming screen...</h2>
+    <p id="status">Initializing...</p>
+
+    <script>
+      const screenshot = require("screenshot-desktop");
+      const io = require("socket.io-client");
+      const { SERVER_URL } = require("../shared/config");
+      const socket = io(SERVER_URL);
+
+      document.getElementById("status").innerText = "Connected to server";
+
+      setInterval(async () => {
+        try {
+          const img = await screenshot({ format: "jpg" });
+          const base64 = Buffer.from(img).toString("base64");
+          socket.emit("screen-data", base64);
+        } catch (err) {
+          console.error(err);
+        }
+      }, 100);
+    </script>
+  </body>
+</html>

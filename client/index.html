@@ -1,0 +1,23 @@
+<!-- client/index.html -->
+<!DOCTYPE html>
+<html>
+  <body>
+    <h2>🖥️ Client: Receiving screen...</h2>
+    <p id="status">Waiting for stream...</p>
+    <img id="screen" width="100%" />
+
+    <script>
+      const io = require("socket.io-client");
+      const { SERVER_URL } = require("../shared/config");
+      const socket = io(SERVER_URL);
+
+      socket.on("connect", () => {
+        document.getElementById("status").innerText = "Connected to server";
+      });
+
+      socket.on("screen-data", (base64) => {
+        document.getElementById("screen").src = "data:image/jpeg;base64," + base64;
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "remote-desktop-client",
+  "version": "1.0.0",
+  "main": "main.js",
+  "dependencies": {
+    "electron": "^28.2.1",
+    "socket.io-client": "^4.7.2"
+  },
+  "scripts": {
+    "start": "electron ."
+  }
+}

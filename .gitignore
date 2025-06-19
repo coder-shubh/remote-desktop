@@ -1,0 +1,29 @@
+# Node modules
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+
+# Electron build output
+dist/
+out/
+build/
+
+# Compiled screenshots (if any)
+*.jpg
+*.png
+
+# VSCode settings (optional)
+.vscode/
+
+# Electron cache
+.cache/
