@@ -1,10 +1,15 @@
 // server/index.js
-const { Server } = require("socket.io");
 const http = require("http");
+const { Server } = require("socket.io");
 
-const PORT = process.env.PORT || 3000; // Use Render-assigned port
+const PORT = process.env.PORT || 3000;
 
-const server = http.createServer();
+// ✅ Create basic HTTP server with a handler
+const server = http.createServer((req, res) => {
+  res.writeHead(200);
+  res.end("Remote Desktop WebSocket Server is running.");
+});
+
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -24,5 +29,5 @@ io.on("connection", (socket) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`WebSocket server running on port ${PORT}`);
+  console.log(`✅ WebSocket server running on port ${PORT}`);
 });
