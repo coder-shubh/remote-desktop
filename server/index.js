@@ -2,6 +2,8 @@
 const { Server } = require("socket.io");
 const http = require("http");
 
+const PORT = process.env.PORT || 3000; // Use Render-assigned port
+
 const server = http.createServer();
 const io = new Server(server, {
   cors: {
@@ -21,6 +23,6 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(3000, () => {
-  console.log("WebSocket server running on http://localhost:3000");
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`WebSocket server running on port ${PORT}`);
 });
